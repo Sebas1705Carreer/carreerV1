@@ -7,6 +7,8 @@ import { siteUrl } from '@/core';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://sebas1705carreer.github.io/carreerV2/" />
     <title>Sebastián — Elige idioma / Choose language</title>
     <link rel="icon" type="image/svg+xml" href={siteUrl('/favicon.svg')} />
     <style>
@@ -51,6 +53,10 @@ import { siteUrl } from '@/core';
     </style>
   </head>
   <body>
+    <!-- Legacy notice: v1 is kept online but superseded by v2 -->
+    <a href="https://sebas1705carreer.github.io/carreerV2/" id="legacy-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;display:block;padding:0.5rem 1rem;background:#4A5AF0;color:#fff;font:600 0.875rem/1.4 Inter,system-ui,sans-serif;text-align:center;text-decoration:none">
+        This is the legacy v1 portfolio &mdash; see the current one &rarr;
+    </a>
     <h1>Elige tu idioma · Choose your language</h1>
     <nav class="grid" aria-label="Language selection">
       {supportedLanguages.map((lang) => (
