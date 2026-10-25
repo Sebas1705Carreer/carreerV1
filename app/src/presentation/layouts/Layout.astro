@@ -23,6 +23,8 @@ import { siteUrl } from '@/core';
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content={description} />
+        <meta name="robots" content="noindex" />
+        <link rel="canonical" href="https://sebas1705carreer.github.io/carreerV2/" />
         <meta name="generator" content={Astro.generator} />
         
         <!-- Fonts -->
@@ -78,5 +80,9 @@ import { siteUrl } from '@/core';
     </head>
     <body>
         <slot />
+        <!-- Legacy notice: v1 is kept online but superseded by v2 -->
+        <a href="https://sebas1705carreer.github.io/carreerV2/" id="legacy-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;display:block;padding:0.5rem 1rem;background:#4A5AF0;color:#fff;font:600 0.875rem/1.4 Inter,system-ui,sans-serif;text-align:center;text-decoration:none">
+            This is the legacy v1 portfolio &mdash; see the current one &rarr;
+        </a>
     </body>
 </html>
