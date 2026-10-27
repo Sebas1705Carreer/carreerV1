@@ -1,5 +1,6 @@
 import type { IProjectRepository, Project, Translations } from '@/domain';
 import { apiGet } from '@/data/datasources/api/CareerApiClient';
+import { portfolioAssetsResolver, mergeProjectVisuals, type PortfolioAssetsResolver } from '@/data/portfolio-assets';
 
 type LocalizedString = Record<string, string>;
 
@@ -12,16 +13,18 @@ interface ApiProject {
     tags: string[];
     github: string | null;
     demo: string | null;
+    // Optional explicit visual override (may not be present in the API yet)
+    image_url?: string | null;
+    image_alt?: string | LocalizedString | null;
+    // Older camelCase variant, still honoured
     imageUrl?: string | null;
 }
 
 const BASE = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const LOCAL_IMAGES = new Set(['agedi', 'sisley', 'youknow', 'iberext', 'epdm', 'vpsorchestrator', 'portfolio', 'codewars']);
 
-function projectImageUrl(id: string, apiImage?: string | null): string | undefined {
-    if (apiImage) return apiImage;
-    if (LOCAL_IMAGES.has(id)) return `${BASE}projects/${id}.webp`;
-    return undefined;
+function legacyImageUrl(id: string): string | undefined {
+    return LOCAL_IMAGES.has(id) ? `${BASE}projects/${id}.webp` : undefined;
 }
 
 function fill(en: string): Translations {
@@ -37,18 +40,28 @@ function fillLs(ls: LocalizedString): Translations {
 }
 
 export class ApiProjectRepository implements IProjectRepository {
+    constructor(private readonly assets: PortfolioAssetsResolver = portfolioAssetsResolver) {}
+
     async getAll(): Promise<Project[]> {
         const projects = await apiGet<ApiProject[]>('/projects');
-        return projects.map((p): Project => ({
-            id: p.id,
-            title: fill(p.name),
-            description: fillLs(p.desc),
-            technologies: p.tags,
-            type: p.context,
-            repoUrl: p.github ?? undefined,
-            demoUrl: p.demo ?? undefined,
-            imageUrl: projectImageUrl(p.id, p.imageUrl),
-            startDate: new Date('2024-01-01'),
+        return Promise.all(projects.map(async (p): Promise<Project> => {
+            const visuals = mergeProjectVisuals({
+                name: p.name,
+                imageUrl: p.image_url ?? p.imageUrl,
+                imageAlt: p.image_alt,
+                legacyImageUrl: legacyImageUrl(p.id),
+            }, await this.assets.resolve(p.github));
+            return {
+                id: p.id,
+                title: fill(p.name),
+                description: fillLs(p.desc),
+                technologies: p.tags,
+                type: p.context,
+                repoUrl: p.github ?? undefined,
+                demoUrl: p.demo ?? undefined,
+                ...visuals,
+                startDate: new Date('2024-01-01'),
+            };
         }));
     }
 

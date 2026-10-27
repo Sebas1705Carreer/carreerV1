@@ -2,6 +2,8 @@
 import type { Language } from '@/domain';
 import { translate } from '@/domain';
 import Section  from '../common/Section.astro';
+import ProjectBanner from '../projects/ProjectBanner.astro';
+import ProjectIcon from '../projects/ProjectIcon.astro';
 
 interface Props {
     lang: Language;
@@ -24,10 +26,8 @@ const projects = await new GetProjectsByTypeUseCase(new ApiProjectRepository()).
             {projects.map((project, index) => {
                 return (
                     <article class="group bg-bg-surface-alt-v rounded-2xl overflow-hidden shadow-md border-2 border-primary-v transition-transform duration-200 hover:-translate-y-2 hover:shadow-xl flex flex-col" data-index={index}>
-                        {project.imageUrl && (
-                            <div class="relative w-full h-48 md:h-56 lg:h-44 overflow-hidden">
-                                <img src={project.imageUrl} alt={translate(project.title, lang)} loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                <div class="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <ProjectBanner project={project} lang={lang}>
+                                <div class="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                                     <div class="flex gap-3">
                                         {project.demoUrl && (
                                             <a
@@ -61,11 +61,13 @@ const projects = await new GetProjectsByTypeUseCase(new ApiProjectRepository()).
                                         )}
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                        </ProjectBanner>
 
                         <div class="p-6 flex-1 flex flex-col">
-                            <h3 class="text-3xl font-bold text-primary-v mb-3">{translate(project.title, lang)}</h3>
+                            <h3 class="text-3xl font-bold text-primary-v mb-3 flex items-center gap-3">
+                                <ProjectIcon project={project} lang={lang} size={40} />
+                                <span>{translate(project.title, lang)}</span>
+                            </h3>
                             <p class="text-bg-inverse-alt-v leading-relaxed mb-4 flex-1">{translate(project.description, lang)}</p>
                         </div>
 

@@ -28,6 +28,8 @@ import { GetPersonalInfoUseCase, GetCommonLabelsUseCase, GetProjectLabelsUseCase
 import Section from '@/presentation/components/common/Section.astro';
 import BackLink from '@/presentation/components/ui/BackLink.astro';
 import SkillsGrid from '@/presentation/components/skills/SkillsGrid.astro';
+import ProjectBanner from '@/presentation/components/projects/ProjectBanner.astro';
+import ProjectIcon from '@/presentation/components/projects/ProjectIcon.astro';
 
 const personalInfo = await new GetPersonalInfoUseCase(new ApiPersonalInfoRepository()).execute();
 const projects = await new GetAllProjectsUseCase(new ApiProjectRepository()).execute();
@@ -56,14 +58,17 @@ const typeLabels: Record<string, Translations> = {
                 <span class="text-secondary-v text-lg sm:text-4xl">{formatMonthYear(project.startDate, lang)}</span>
             </div>
 
-            {project.imageUrl && (
+            {(project.bannerUrl ?? project.imageUrl) && (
                 <div class="bg-accent-v rounded-lg overflow-hidden border border-secondary-v my-5">
-                    <img src={project.imageUrl} alt={translate(project.title, lang)} loading="lazy" class="w-full object-cover" />
+                    <ProjectBanner project={project} lang={lang} zoomOnHover={false} />
                 </div>
             )}
 
             <article class="bg-bg-surface-alt-v border border-secondary-v rounded-lg p-8">
-                <h1 class="text-5xl font-bold mb-4 text-primary-v">{translate(project.title, lang)}</h1>
+                <h1 class="text-5xl font-bold mb-4 text-primary-v flex items-center gap-4">
+                    <ProjectIcon project={project} lang={lang} size={64} fallback />
+                    <span>{translate(project.title, lang)}</span>
+                </h1>
                 <p class="text-bg-inverse-alt-v text-lg leading-relaxed mb-6">{translate(project.description, lang)}</p>
 
                 <div class="flex gap-4 mt-6 pt-6 border-t border-secondary-v">

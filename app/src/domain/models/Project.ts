@@ -6,7 +6,12 @@ export interface Project {
     title: Translations;
     description: Translations;
     technologies: string[]; // List of technology IDs used
-    imageUrl?: string;
+    imageUrl?: string; // Legacy bundled image (in-memory datasource)
+    // Portfolio assets standard (.github/portfolio/ in the project's repo), resolved at build time
+    iconUrl?: string;          // 512x512 PNG icon/logo
+    bannerUrl?: string;        // 2:1 banner; when absent the UI renders a generated fallback
+    bannerAlt?: Translations;  // Banner alt text per language
+    accent?: string;           // Hex colour (#RGB / #RRGGBB) for the card and the fallback
     demoUrl?: string;
     repoUrl?: string;
     startDate: Date;
