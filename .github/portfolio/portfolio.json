@@ -1,0 +1,11 @@
+{
+  "accent": "#3B82F6",
+  "icon_alt": {
+    "en": "Personal Portfolio v1 icon: a white letter S on a blue-to-violet gradient square",
+    "es": "Icono de Personal Portfolio v1: una letra S blanca sobre un cuadrado degradado de azul a violeta"
+  },
+  "banner_alt": {
+    "en": "Personal Portfolio v1 banner: the favicon, the tagline \"Astro portfolio in 10 languages\" and the stack (Astro, TypeScript, Clean Architecture, Docker, Vitest)",
+    "es": "Banner de Personal Portfolio v1: el favicon, el lema \"Portfolio en Astro en 10 idiomas\" y el stack (Astro, TypeScript, Clean Architecture, Docker, Vitest)"
+  }
+}
