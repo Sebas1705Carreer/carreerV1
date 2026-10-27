@@ -1,0 +1,51 @@
+---
+// 2:1 project banner (portfolio assets standard). Renders the resolved banner lazily, or a
+// generated fallback: the project icon, or its initials, on the accent colour (neutral if none).
+// The default slot is laid over the banner (e.g. hover actions).
+import type { Language, Project } from '@/domain';
+import { translate } from '@/domain';
+import { projectFallback } from '@/core';
+
+interface Props {
+    project: Project;
+    lang: Language;
+    class?: string;
+    zoomOnHover?: boolean;
+}
+
+const { project, lang, class: className = '', zoomOnHover = true } = Astro.props;
+const title = translate(project.title, lang);
+const src = project.bannerUrl ?? project.imageUrl;
+const alt = project.bannerAlt ? translate(project.bannerAlt, lang) : title;
+const fallback = projectFallback(title, project.accent);
+const zoom = zoomOnHover ? 'transition-transform duration-500 group-hover:scale-110' : '';
+---
+
+<div class={`project-banner relative w-full aspect-[2/1] overflow-hidden ${className}`} data-testid="project-banner">
+    {src ? (
+        <img
+            src={src}
+            alt={alt}
+            width="1280"
+            height="640"
+            loading="lazy"
+            decoding="async"
+            class={`w-full h-full object-cover ${zoom}`}
+        />
+    ) : (
+        <div
+            class={`w-full h-full flex items-center justify-center bg-linear-to-br from-black/0 to-black/25 ${zoom}`}
+            style={`background-color: ${fallback.background}; color: ${fallback.foreground};`}
+            role="img"
+            aria-label={alt}
+            data-testid="project-banner-fallback"
+        >
+            {project.iconUrl ? (
+                <img src={project.iconUrl} alt="" width="96" height="96" loading="lazy" decoding="async" class="w-1/4 max-w-24 aspect-square object-contain drop-shadow-md" />
+            ) : (
+                <span class="text-5xl font-bold tracking-wider select-none" aria-hidden="true">{fallback.initials}</span>
+            )}
+        </div>
+    )}
+    <slot />
+</div>

@@ -1,0 +1,38 @@
+---
+// Project logo slot: the repo icon when available; with `fallback`, the initials on the accent colour.
+import type { Language, Project } from '@/domain';
+import { translate } from '@/domain';
+import { projectFallback } from '@/core';
+
+interface Props {
+    project: Project;
+    lang: Language;
+    size?: number;
+    fallback?: boolean;
+    class?: string;
+}
+
+const { project, lang, size = 40, fallback = false, class: className = '' } = Astro.props;
+const visual = projectFallback(translate(project.title, lang), project.accent);
+---
+
+{project.iconUrl ? (
+    <img
+        src={project.iconUrl}
+        alt=""
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+        class={`shrink-0 rounded-lg object-contain ${className}`}
+        style={`width:${size}px;height:${size}px`}
+        data-testid="project-icon"
+    />
+) : fallback && (
+    <span
+        class={`shrink-0 inline-flex items-center justify-center rounded-lg font-bold select-none ${className}`}
+        style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.4)}px;background-color:${visual.background};color:${visual.foreground}`}
+        aria-hidden="true"
+        data-testid="project-icon-fallback"
+    >{visual.initials}</span>
+)}

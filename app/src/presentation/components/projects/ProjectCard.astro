@@ -1,6 +1,8 @@
 ---
 import type { CommonLabels, Language, Project, ProjectLabels, Skill } from '@/domain';
 import TechBadge from '../ui/TechBadge.astro';
+import ProjectBanner from './ProjectBanner.astro';
+import ProjectIcon from './ProjectIcon.astro';
 
 interface Props {
     project: Project;
@@ -29,22 +31,14 @@ import { siteUrl } from '@/core';
 ---
 
 <article class="group bg-bg-surface-v rounded-lg shadow-sm overflow-hidden flex flex-col">
-    {showImage && project.imageUrl && (
-        <div class="w-full h-48 overflow-hidden bg-bg-surface-alt-v">
-            <img 
-                src={project.imageUrl} 
-                alt={translate(project.title, lang)} 
-                width="400" 
-                height="200"
-                loading="lazy"
-                class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-            />
-        </div>
-    )}
-    
+    {showImage && <ProjectBanner project={project} lang={lang} class="bg-bg-surface-alt-v" />}
+
     <div class="p-6 flex flex-col grow gap-4 items-center text-center md:items-stretch md:text-left">
         <div>
-            <h3 class="text-2xl font-semibold text-primary-v m-0">{translate(project.title, lang)}</h3>
+            <h3 class="text-2xl font-semibold text-primary-v m-0 inline-flex items-center gap-3">
+                <ProjectIcon project={project} lang={lang} size={32} />
+                <span>{translate(project.title, lang)}</span>
+            </h3>
         </div>
         <p class="text-bg-inverse-alt-v text-lg leading-relaxed grow max-w-prose mx-auto md:mx-0">{translate(project.description, lang)}</p>
         
